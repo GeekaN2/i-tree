@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "description": "Mobile app for recognizing the state of plants"
   }
 }
