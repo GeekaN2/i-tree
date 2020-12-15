@@ -5,6 +5,7 @@ import { Camera } from 'expo-camera';
 export default function TakePicture() {
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [type, setType] = useState(Camera.Constants.Type.back);
+  let camera: Camera | null;
 
   useEffect(() => {
     (async () => {
@@ -12,6 +13,13 @@ export default function TakePicture() {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  const snap = async () => {
+    if (camera) {
+      let photo = await camera.takePictureAsync();
+      console.log(photo);
+    }
+  };
 
   if (hasPermission === null) {
     return <View />;
@@ -22,12 +30,13 @@ export default function TakePicture() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Camera style={{ flex: 1 }} type={type}>
+      <Camera style={{ flex: 1 }} type={type} ref={(ref) => { camera = ref }}>
         <View
           style={{
             flex: 1,
             backgroundColor: 'transparent',
             flexDirection: 'row',
+            justifyContent: "space-evenly"
           }}>
           <TouchableOpacity
             style={{
@@ -44,6 +53,17 @@ export default function TakePicture() {
             }}>
             <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 0.2,
+              alignSelf: 'flex-end',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              snap();
+            }}>
+            <Text style={{ fontSize: 30, marginBottom: 10, color: 'white' }}> SNAP </Text>
+          </TouchableOpacity>
         </View>
       </Camera>
     </View>
@@ -54,4 +74,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+
+  cameraButtons: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center"
+  }
 });
